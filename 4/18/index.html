@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Handling and Validation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+    form {
+      margin: 20px 0;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+<h1>Form Handling and Validation</h1>
+
+<h2>Task 1: User Form</h2>
+<form id="userForm">
+  <label for="textInput">Text Input:</label>
+  <input type="text" id="textInput" name="textInput">
+  <br><br>
+
+  <label>Checkbox:</label>
+  <input type="checkbox" id="checkbox1" name="checkbox1" value="Option 1"> Option 1
+  <input type="checkbox" id="checkbox2" name="checkbox2" value="Option 2"> Option 2
+  <br><br>
+
+  <label>Radio Buttons:</label>
+  <input type="radio" id="radio1" name="radioGroup" value="Yes"> Yes
+  <input type="radio" id="radio2" name="radioGroup" value="No"> No
+  <br><br>
+
+  <label for="dropdown">Dropdown:</label>
+  <select id="dropdown" name="dropdown">
+    <option value="Option 1">Option 1</option>
+    <option value="Option 2">Option 2</option>
+    <option value="Option 3">Option 3</option>
+  </select>
+  <br><br>
+
+  <button type="button" onclick="handleFormData()">Submit</button>
+</form>
+
+<div id="formOutput"></div>
+
+<script>
+
+  function handleFormData() {
+    const textInput = document.getElementById('textInput').value;
+    const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+    const radio = document.querySelector('input[name="radioGroup"]:checked');
+    const dropdown = document.getElementById('dropdown').value;
+
+    const output = `
+                Text Input: ${textInput}<br>
+                Checkboxes: ${checkboxes.join(', ')}<br>
+                Radio: ${radio ? radio.value : 'None selected'}<br>
+                Dropdown: ${dropdown}
+            `;
+
+    document.getElementById('formOutput').innerHTML = output;
+  }
+</script>
+
+
+<h2>Task 2: Form Validation</h2>
+<form id="validationForm" onsubmit="return validateForm()">
+  <label for="email">Email (HTML5):</label>
+  <input type="email" id="email" name="email" required>
+  <br><br>
+
+  <label for="password">Password (JS):</label>
+  <input type="password" id="password" name="password">
+  <span class="error" id="passwordError"></span>
+  <br><br>
+
+  <label for="regexInput">Regex Input:</label>
+  <input type="text" id="regexInput" name="regexInput">
+  <span class="error" id="regexError"></span>
+  <br><br>
+
+  <button type="submit">Validate</button>
+</form>
+
+<script>
+
+  function validateForm() {
+    let valid = true;
+
+
+    const password = document.getElementById('password').value;
+    const passwordError = document.getElementById('passwordError');
+    if (password.length < 8) {
+      passwordError.textContent = 'Password must be at least 8 characters.';
+      valid = false;
+    } else {
+      passwordError.textContent = '';
+    }
+
+
+    const regexInput = document.getElementById('regexInput').value;
+    const regexError = document.getElementById('regexError');
+    const regex = /^[a-zA-Z0-9]+$/; // Alphanumeric only
+    if (!regex.test(regexInput)) {
+      regexError.textContent = 'Only alphanumeric characters are allowed.';
+      valid = false;
+    } else {
+      regexError.textContent = '';
+    }
+
+    return valid;
+  }
+</script>
+
+
+<h2>Task 3: Regular Expressions</h2>
+<script>
+
+  const sampleText = "This is a sample text with numbers 12345 and symbols !@#$%.";
+
+
+  const hasNumbers = /\d+/.test(sampleText);
+  console.log("Contains numbers:", hasNumbers);
+
+
+  const execResult = /\d+/.exec(sampleText);
+  console.log("First number found:", execResult ? execResult[0] : 'None');
+
+
+  const words = sampleText.split(/\s+/);
+  console.log("Words:", words);
+
+
+  const matches = sampleText.match(/\w+/g);
+  console.log("All words:", matches);
+
+
+  const symbolIndex = sampleText.search(/!@#\$%/);
+  console.log("Symbol index:", symbolIndex);
+
+
+  const cleanedText = sampleText.replace(/\d+/g, "[number]");
+  console.log("Cleaned text:", cleanedText);
+</script>
+
+</body>
+</html>

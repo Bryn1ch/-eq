@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация пользователя</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="form-container">
+  <h1>Регистрация пользователя</h1>
+  <form id="registration-form">
+    <div class="form-group">
+      <label for="last-name">Фамилия:</label>
+      <input type="text" id="last-name" name="last-name" required>
+    </div>
+    <div class="form-group">
+      <label for="first-name">Имя:</label>
+      <input type="text" id="first-name" name="first-name" required>
+    </div>
+    <div class="form-group">
+      <label for="middle-name">Отчество:</label>
+      <input type="text" id="middle-name" name="middle-name">
+    </div>
+    <div class="form-group">
+      <label for="department">Подразделение:</label>
+      <input type="text" id="department" name="department">
+    </div>
+    <div class="form-group">
+      <label for="position">Должность:</label>
+      <input type="text" id="position" name="position">
+    </div>
+    <div class="form-group">
+      <label for="email">E-mail:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="phone">Телефон:</label>
+      <input type="text" id="phone" name="phone">
+    </div>
+    <div class="form-group">
+      <label for="internal-phone">Внутренний телефон:</label>
+      <input type="text" id="internal-phone" name="internal-phone">
+    </div>
+    <div class="form-group">
+      <label for="mobile-phone">Мобильный телефон:</label>
+      <input type="text" id="mobile-phone" name="mobile-phone">
+    </div>
+    <div class="form-group">
+      <label for="password">Пароль:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <div class="form-group">
+      <label for="confirm-password">Повторите пароль:</label>
+      <input type="password" id="confirm-password" name="confirm-password" required>
+    </div>
+    <div class="form-buttons">
+      <button type="button" class="ok" onclick="submitForm()">OK</button>
+      <button type="button" class="cancel" onclick="clearCookies()">Отмена</button>
+    </div>
+  </form>
+  <div id="form-output" style="display: none;">
+    <h3>Данные формы:</h3>
+    <pre id="output-data"></pre>
+  </div>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>
