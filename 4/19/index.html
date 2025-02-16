@@ -33,7 +33,7 @@
 <body>
 <h1>Form Handling, Validation, and Cart</h1>
 
-<!-- Task 1: User Form and Validation Combined -->
+<!-- User Form and Validation -->
 <h2>Form Handling and Validation</h2>
 <form id="userForm">
   <label for="name">Name:</label>
@@ -60,7 +60,6 @@
 <div id="formOutput"></div>
 
 <script>
-  // Handle form data and validation
   function handleFormData() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
@@ -69,7 +68,6 @@
 
     let valid = true;
 
-    // Password validation
     const passwordError = document.getElementById('passwordError');
     if (password.length < 8) {
       passwordError.textContent = 'Password must be at least 8 characters.';
@@ -78,9 +76,8 @@
       passwordError.textContent = '';
     }
 
-    // Regex validation
     const regexError = document.getElementById('regexError');
-    const regex = /^[a-zA-Z0-9]+$/; // Alphanumeric only
+    const regex = /^[a-zA-Z0-9]+$/;
     if (!regex.test(regexInput)) {
       regexError.textContent = 'Only alphanumeric characters are allowed.';
       valid = false;
@@ -89,19 +86,23 @@
     }
 
     if (valid) {
-      const output = `
-                    Name: ${name}<br>
-                    Email: ${email}<br>
-                    Password: ${password}<br>
-                    Regex Input: ${regexInput}
-                `;
+      const formData = { name, email, password, regexInput };
+      localStorage.setItem('userData', JSON.stringify(formData));
+      document.getElementById('formOutput').innerHTML = `Name: ${name}<br>Email: ${email}<br>Regex Input: ${regexInput}`;
+    }
+  }
 
-      document.getElementById('formOutput').innerHTML = output;
+  window.onload = function () {
+    const savedData = JSON.parse(localStorage.getItem('userData'));
+    if (savedData) {
+      document.getElementById('name').value = savedData.name;
+      document.getElementById('email').value = savedData.email;
+      document.getElementById('regexInput').value = savedData.regexInput;
     }
   }
 </script>
 
-<!-- Task 1: JSON Catalog and Shopping Cart -->
+<!-- Catalog and Shopping Cart -->
 <h2>Catalog and Shopping Cart</h2>
 <div class="catalog" id="catalog"></div>
 <div class="cart" id="cart">
@@ -111,31 +112,16 @@
 </div>
 
 <script>
-  const catalogData = [
-    { id: 1, name: 'Product 1', price: 100 },
-    { id: 2, name: 'Product 2', price: 200 },
-    { id: 3, name: 'Product 3', price: 300 },
-    { id: 4, name: 'Product 4', price: 400 },
-    { id: 5, name: 'Product 5', price: 500 },
-    { id: 6, name: 'Product 6', price: 600 },
-    { id: 7, name: 'Product 7', price: 700 },
-    { id: 8, name: 'Product 8', price: 800 },
-    { id: 9, name: 'Product 9', price: 900 },
-    { id: 10, name: 'Product 10', price: 1000 }
-  ];
-
-  const cart = [];
+  const catalogData = [...Array(10).keys()].map(i => ({ id: i + 1, name: `Product ${i + 1}`, price: (i + 1) * 100 }));
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
   function displayCatalog() {
     const catalog = document.getElementById('catalog');
+    catalog.innerHTML = '';
     catalogData.forEach(product => {
       const productDiv = document.createElement('div');
       productDiv.className = 'product';
-      productDiv.innerHTML = `
-                    <h4>${product.name}</h4>
-                    <p>Price: $${product.price}</p>
-                    <button onclick="addToCart(${product.id})">Add to Cart</button>
-                `;
+      productDiv.innerHTML = `<h4>${product.name}</h4><p>Price: $${product.price}</p><button onclick="addToCart(${product.id})">Add to Cart</button>`;
       catalog.appendChild(productDiv);
     });
   }
@@ -143,6 +129,7 @@
   function addToCart(productId) {
     const product = catalogData.find(p => p.id === productId);
     cart.push(product);
+    localStorage.setItem('cart', JSON.stringify(cart));
     updateCart();
   }
 
@@ -157,14 +144,17 @@
   }
 
   function clearCart() {
-    cart.length = 0;
+    cart = [];
+    localStorage.removeItem('cart');
     updateCart();
   }
 
-  displayCatalog();
+  window.onload = function () {
+    displayCatalog();
+    updateCart();
+  }
 </script>
 
-<!-- Task 2: Working with Cookies -->
 <h2>Working with Cookies</h2>
 <form id="cookieForm" onsubmit="saveToCookies(); return false;">
   <label for="fullName">Full Name:</label>
@@ -212,5 +202,6 @@
 
   displayCookies();
 </script>
+
 </body>
 </html>
