@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Handling, Validation, and Cart</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+    form {
+      margin: 20px 0;
+    }
+    .error {
+      color: red;
+    }
+    .catalog {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .product {
+      border: 1px solid #ccc;
+      margin: 10px;
+      padding: 10px;
+      width: 200px;
+    }
+    .cart {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<h1>Form Handling, Validation, and Cart</h1>
+
+<!-- User Form and Validation -->
+<h2>Form Handling and Validation</h2>
+<form id="userForm">
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name" required>
+  <br><br>
+
+  <label for="email">Email (HTML5):</label>
+  <input type="email" id="email" name="email" required>
+  <br><br>
+
+  <label for="password">Password (JS):</label>
+  <input type="password" id="password" name="password">
+  <span class="error" id="passwordError"></span>
+  <br><br>
+
+  <label for="regexInput">Regex Input:</label>
+  <input type="text" id="regexInput" name="regexInput">
+  <span class="error" id="regexError"></span>
+  <br><br>
+
+  <button type="button" onclick="handleFormData()">Submit</button>
+</form>
+
+<div id="formOutput"></div>
+
+<script>
+  function handleFormData() {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const regexInput = document.getElementById('regexInput').value;
+
+    let valid = true;
+
+    const passwordError = document.getElementById('passwordError');
+    if (password.length < 8) {
+      passwordError.textContent = 'Password must be at least 8 characters.';
+      valid = false;
+    } else {
+      passwordError.textContent = '';
+    }
+
+    const regexError = document.getElementById('regexError');
+    const regex = /^[a-zA-Z0-9]+$/;
+    if (!regex.test(regexInput)) {
+      regexError.textContent = 'Only alphanumeric characters are allowed.';
+      valid = false;
+    } else {
+      regexError.textContent = '';
+    }
+
+    if (valid) {
+      const formData = { name, email, password, regexInput };
+      localStorage.setItem('userData', JSON.stringify(formData));
+      document.getElementById('formOutput').innerHTML = `Name: ${name}<br>Email: ${email}<br>Regex Input: ${regexInput}`;
+    }
+  }
+
+  window.onload = function () {
+    const savedData = JSON.parse(localStorage.getItem('userData'));
+    if (savedData) {
+      document.getElementById('name').value = savedData.name;
+      document.getElementById('email').value = savedData.email;
+      document.getElementById('regexInput').value = savedData.regexInput;
+    }
+  }
+</script>
+
+<!-- Catalog and Shopping Cart -->
+<h2>Catalog and Shopping Cart</h2>
+<div class="catalog" id="catalog"></div>
+<div class="cart" id="cart">
+  <h3>Shopping Cart</h3>
+  <ul id="cartItems"></ul>
+  <button onclick="clearCart()">Clear Cart</button>
+</div>
+
+<script>
+  const catalogData = [...Array(10).keys()].map(i => ({ id: i + 1, name: `Product ${i + 1}`, price: (i + 1) * 100 }));
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  function displayCatalog() {
+    const catalog = document.getElementById('catalog');
+    catalog.innerHTML = '';
+    catalogData.forEach(product => {
+      const productDiv = document.createElement('div');
+      productDiv.className = 'product';
+      productDiv.innerHTML = `<h4>${product.name}</h4><p>Price: $${product.price}</p><button onclick="addToCart(${product.id})">Add to Cart</button>`;
+      catalog.appendChild(productDiv);
+    });
+  }
+
+  function addToCart(productId) {
+    const product = catalogData.find(p => p.id === productId);
+    cart.push(product);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCart();
+  }
+
+  function updateCart() {
+    const cartItems = document.getElementById('cartItems');
+    cartItems.innerHTML = '';
+    cart.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = `${item.name} - $${item.price}`;
+      cartItems.appendChild(li);
+    });
+  }
+
+  function clearCart() {
+    cart = [];
+    localStorage.removeItem('cart');
+    updateCart();
+  }
+
+  window.onload = function () {
+    displayCatalog();
+    updateCart();
+  }
+</script>
+
+<h2>Working with Cookies</h2>
+<form id="cookieForm" onsubmit="saveToCookies(); return false;">
+  <label for="fullName">Full Name:</label>
+  <input type="text" id="fullName" name="fullName">
+  <br><br>
+
+  <label for="birthDate">Date of Birth:</label>
+  <input type="date" id="birthDate" name="birthDate">
+  <br><br>
+
+  <label for="hobbies">Hobbies:</label>
+  <input type="text" id="hobbies" name="hobbies">
+  <br><br>
+
+  <button type="submit">Save to Cookies</button>
+  <button type="button" onclick="clearCookies()">Clear Cookies</button>
+</form>
+
+<div id="cookieOutput"></div>
+
+<script>
+  function saveToCookies() {
+    const fullName = document.getElementById('fullName').value;
+    const birthDate = document.getElementById('birthDate').value;
+    const hobbies = document.getElementById('hobbies').value;
+
+    document.cookie = `fullName=${fullName};path=/;`;
+    document.cookie = `birthDate=${birthDate};path=/;`;
+    document.cookie = `hobbies=${hobbies};path=/;`;
+
+    displayCookies();
+  }
+
+  function displayCookies() {
+    const cookies = document.cookie;
+    document.getElementById('cookieOutput').textContent = `Cookies: ${cookies}`;
+  }
+
+  function clearCookies() {
+    document.cookie = "fullName=;path=/;expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "birthDate=;path=/;expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "hobbies=;path=/;expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    displayCookies();
+  }
+
+  displayCookies();
+</script>
+
+</body>
+</html>
